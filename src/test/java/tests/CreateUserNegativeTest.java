@@ -22,32 +22,53 @@ public class CreateUserNegativeTest extends BaseTest{
     }
 
 
-    @AfterEach
-    public void tearDown() {
-        createUserSteps.removeCreatedUser(accessToken);
-    }
-
-
-
     @Test
     //to update
-    @DisplayName("Check correct response code and text after adding a courier with all fields filled")
-    public void createUserReturnsValidResponse() {
-        //генерирую логин и пароль
-        email = DataGenerator.generateUserEmail();
+    @DisplayName("Create user without email")
+    public void createUserWithoutEmailForbidden() {
+        //генерирую пароль
         password = DataGenerator.generateUserPassword();
         //создаю user
-        UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(email, password, "firstname" + email);
+        UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(null, password, "firstname" + email);
         //отправляю запрос на endpoint и получаю ответ
         Response response = createUserSteps.createUser(userRegistrationRequest);
         //проверка статус кода
-        createUserSteps.checkStatusCode(response, 200);
+        createUserSteps.checkStatusCode(response, 403);
         //проверка тела сообщения
-        createUserSteps.checkResponseValue(response, "success", true);
-        //десериализация ответа
-        UserRegistrationResponse userRegistrationResponse = createUserSteps.userRegistrationResponse(response);
-        accessToken = userRegistrationResponse.getAccessToken();
-        String refreshToken = userRegistrationResponse.getRefreshToken();
-
+        createUserSteps.checkNegativeResponseValueForSkippedRequiredFieldsCreateRequest(response);
     }
+
+    @Test
+    //to update
+    @DisplayName("Create user without email")
+    public void createUserWithoutPasswordForbidden() {
+        //генерирую email
+        email = DataGenerator.generateUserEmail();
+        //создаю user
+        UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(email, null, "firstname" + email);
+        //отправляю запрос на endpoint и получаю ответ
+        Response response = createUserSteps.createUser(userRegistrationRequest);
+        //проверка статус кода
+        createUserSteps.checkStatusCode(response, 403);
+        //проверка тела сообщения
+        createUserSteps.checkNegativeResponseValueForSkippedRequiredFieldsCreateRequest(response);
+    }
+
+    @Test
+    //to update
+    @DisplayName("Create user without email")
+    public void createUserWithoutFirstNameForbidden() {
+        //генерирую email and password
+        email = DataGenerator.generateUserEmail();
+        password = DataGenerator.generateUserPassword();
+        //создаю user
+        UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(email, password, null);
+        //отправляю запрос на endpoint и получаю ответ
+        Response response = createUserSteps.createUser(userRegistrationRequest);
+        //проверка статус кода
+        createUserSteps.checkStatusCode(response, 403);
+        //проверка тела сообщения
+        createUserSteps.checkNegativeResponseValueForSkippedRequiredFieldsCreateRequest(response);
+    }
+
 }
