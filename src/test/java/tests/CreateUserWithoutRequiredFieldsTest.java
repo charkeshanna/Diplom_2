@@ -1,16 +1,14 @@
 package tests;
 
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pojo.request.UserRegistrationRequest;
-import pojo.response.UserRegistrationResponse;
 import steps.CreateUserSteps;
 import utils.DataGenerator;
 
-public class CreateUserNegativeTest extends BaseTest{
+public class CreateUserWithoutRequiredFieldsTest extends BaseTest{
     private String email;
     private String password;
     private String accessToken;
