@@ -1,6 +1,7 @@
 package tests;
 
 import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,15 +10,23 @@ import pojo.response.UserRegistrationResponse;
 import steps.CreateUserSteps;
 import utils.DataGenerator;
 
-public class CreateUserTest extends BaseTest{
+public class CreateUserNegativeTest extends BaseTest{
     private String email;
     private String password;
+    private String accessToken;
     CreateUserSteps createUserSteps;
 
     @BeforeEach
     public void setUp() {
         createUserSteps = new CreateUserSteps();
     }
+
+
+    @AfterEach
+    public void tearDown() {
+        createUserSteps.removeCreatedUser(accessToken);
+    }
+
 
 
     @Test
@@ -30,13 +39,15 @@ public class CreateUserTest extends BaseTest{
         //создаю user
         UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest(email, password, "firstname" + email);
         //отправляю запрос на endpoint и получаю ответ
-        UserRegistrationResponse userRegistrationResponse = createUserSteps.createUser(userRegistrationRequest);
-        String accessToken = userRegistrationResponse.getAccessToken();
+        Response response = createUserSteps.createUser(userRegistrationRequest);
+        //проверка статус кода
+        createUserSteps.checkStatusCode(response, 200);
+        //проверка тела сообщения
+        createUserSteps.checkResponseValue(response, "success", true);
+        //десериализация ответа
+        UserRegistrationResponse userRegistrationResponse = createUserSteps.userRegistrationResponse(response);
+        accessToken = userRegistrationResponse.getAccessToken();
         String refreshToken = userRegistrationResponse.getRefreshToken();
-
-        //проверяю ответ
-        //createUserSteps.checkStatusCode(userRegistrationResponse, 200);
-        //createCourierSteps.checkResponseValue(response, "ok", true);
 
     }
 }

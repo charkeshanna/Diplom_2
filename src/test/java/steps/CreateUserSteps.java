@@ -13,28 +13,44 @@ public class CreateUserSteps {
 
 
     @Step("Create new User")
-    public  UserRegistrationResponse createUser(UserRegistrationRequest userRegistrationRequest) {
+    public Response createUser(UserRegistrationRequest userRegistrationRequest) {
 
         return given()
                 .header("Content-type", "application/json")
                 .body(userRegistrationRequest)
                 .when()
-                .post("/api/auth/register")
-                .body().as(UserRegistrationResponse.class);
+                .post("/api/auth/register");
+                //.body().as(UserRegistrationResponse.class);
     }
-/*
+
     @Step("Check status code {expectedCode} of the response")
     public  void checkStatusCode(Response response, int expectedCode) {
         int actualCode = response.getStatusCode();
         assertEquals(expectedCode, actualCode, "Статус-код не совпадает!");
-    }*/
-/*
+    }
+
+    @Step("Десериализация возвращаемого объекта")
+    public UserRegistrationResponse userRegistrationResponse(Response response) {
+        return response.then().extract().as(UserRegistrationResponse.class);
+    }
+
+
     @Step("Check message body of the response {expectedValue}")
     public  void checkResponseValue(Response response, String key, Object expectedValue) {
         Object actualValue = response.jsonPath().get(key);
         assertEquals(expectedValue, actualValue, "Значение по ключу '" + key + "' не совпадает");
     }
 
+    @Step("Remove user")
+    public void removeCreatedUser(String accessToken) {
+        given()
+                .header("Authorization", accessToken)
+                .when()
+                .delete("/api/auth/user")
+                .then()
+                .statusCode(202);
+    }
+/*
     @Step("Login as a courier and get courierID")
     public  int getCourierIDafterSuccessLogin(CourierCredentials courierCredentials) {
         return given()
