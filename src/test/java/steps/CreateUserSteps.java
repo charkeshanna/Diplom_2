@@ -3,6 +3,7 @@ package steps;
 import freemarker.core._ArrayEnumeration;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
+import pojo.request.UserAuthenticationRequest;
 import pojo.request.UserRegistrationRequest;
 import pojo.response.UserRegistrationResponse;
 import utils.DataGenerator;
@@ -39,7 +40,7 @@ public class CreateUserSteps {
     }
 
 
-    @Step("Check message body of the response {expectedValue}")
+    @Step("Check message body: value '{key}' equals '{expectedValue}'")
     public  void checkResponseValue(Response response, String key, Object expectedValue) {
         Object actualValue = response.jsonPath().get(key);
         assertEquals(expectedValue, actualValue, "Значение по ключу '" + key + "' не совпадает");
@@ -86,22 +87,19 @@ public class CreateUserSteps {
                 .extract()
                 .as(UserRegistrationResponse.class);
     }
-/*
-    @Step("Login as a courier and get courierID")
-    public  int getCourierIDafterSuccessLogin(CourierCredentials courierCredentials) {
+
+    @Step("Login as user")
+    public  Response loginAsUser(UserAuthenticationRequest userAuthenticationRequest) {
         return given()
                 .header("Content-type", "application/json")
-                .body(courierCredentials)
+                .body(userAuthenticationRequest)
                 .when()
-                .post("/api/v1/courier/login")
-                .then()
-                .statusCode(200)
-                .extract()
-                .path("id");
+                .post("/api/auth/register");
     }
 
 
 
+/*
     @Step("Login as courier (without checking the response)")
     public  Response loginWithLoginAndPassword(CourierCredentials courierCredentials) {
         return given()
