@@ -3,6 +3,7 @@ package steps;
 import freemarker.core._ArrayEnumeration;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
+import pojo.request.UpdateUserData;
 import pojo.request.UserAuthenticationRequest;
 import pojo.request.UserRegistrationRequest;
 import pojo.response.UserRegistrationResponse;
@@ -95,6 +96,15 @@ public class CreateUserSteps {
                 .when()
                 .post("/api/auth/login");
     }
+
+    @Step("update users data")
+    public Response updateUsersData(String accessToken, UpdateUserData updateUserData) {
+        return given()
+                .header("Authorization", accessToken)
+                .body(updateUserData)
+                .when()
+                .patch("/api/auth/user");
+      }
 
 
 
