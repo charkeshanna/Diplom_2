@@ -19,7 +19,6 @@ public class CreateUserSteps {
 
     @Step("Create new User")
     public Response createUser(UserRegistrationRequest userRegistrationRequest) {
-
         return given()
                 .header("Content-type", "application/json")
                 .body(userRegistrationRequest)
@@ -94,8 +93,9 @@ public class CreateUserSteps {
                 .header("Content-type", "application/json")
                 .body(userAuthenticationRequest)
                 .when()
-                .post("/api/auth/register");
+                .post("/api/auth/login");
     }
+
 
 
 

@@ -9,7 +9,6 @@ import pojo.request.UserAuthenticationRequest;
 import pojo.response.UserRegistrationResponse;
 import steps.CreateUserSteps;
 import utils.DataGenerator;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -46,11 +45,10 @@ public class UserAuthenticationTest extends BaseTest{
     @DisplayName("Authentication with valid email and password")
     public void loginWithValidCredentialsReturnsSuccessResponse() {
         UserAuthenticationRequest userAuthenticationRequest = new UserAuthenticationRequest(email, password);
-        //получим ответ после успешного логина
         Response response = createUserSteps.loginAsUser(userAuthenticationRequest);
-        //проверим статус код
+        // проверю статус-код
         createUserSteps.checkStatusCode(response, 200);
-        //проверим успешность
+        //проверю успешное сообщение
         createUserSteps.checkResponseValue(response, "success", true);
         //проверю что нужный email возвращает
         createUserSteps.checkResponseValue(response, "user.email", email);
@@ -58,5 +56,22 @@ public class UserAuthenticationTest extends BaseTest{
         String loginToken = response.jsonPath().getString("accessToken");
         assertNotNull(loginToken, "accessToken should not be null");
         assertFalse(loginToken.isEmpty(), "accessToken should not be empty");
+    }
+
+    @Test
+    @DisplayName("Login with wrong login and password")
+    public void loginWithWrongEmailAndPasswordReturnsUnathorized() {
+        //сгеним новую пару логин-пароль
+        email = DataGenerator.generateUserEmail();
+        password = DataGenerator.generateUserPassword();
+        //что-то там создадим
+        UserAuthenticationRequest userAuthenticationRequest = new UserAuthenticationRequest(email, password);
+        Response response = createUserSteps.loginAsUser(userAuthenticationRequest);
+        // проверю статус-код
+        createUserSteps.checkStatusCode(response, 401);
+        //проверю успешное сообщение
+        createUserSteps.checkResponseValue(response, "success", false);
+        //проверю что нужный текст сообщения возвращает
+        createUserSteps.checkResponseValue(response, "message", "email or password are incorrect");
     }
 }
