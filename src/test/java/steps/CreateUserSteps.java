@@ -98,9 +98,10 @@ public class CreateUserSteps {
     }
 
     @Step("update users data")
-    public Response updateUsersData(String accessToken, UpdateUserData updateUserData) {
+    public Response updateDataForAuthorizedUser(String accessToken, UpdateUserData updateUserData) {
         return given()
                 .header("Authorization", accessToken)
+                .header("Content-Type", "application/json")
                 .body(updateUserData)
                 .when()
                 .patch("/api/auth/user");
