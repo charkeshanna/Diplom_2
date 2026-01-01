@@ -11,9 +11,6 @@ import pojo.response.UserRegistrationResponse;
 import steps.CreateUserSteps;
 import utils.DataGenerator;
 
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UpdateUsersDataForAuthorizedUserTest extends BaseTest{
     private boolean isUserCreated;

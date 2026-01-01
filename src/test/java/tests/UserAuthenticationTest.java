@@ -61,7 +61,7 @@ public class UserAuthenticationTest extends BaseTest{
     @Test
     @DisplayName("Login with wrong login and password")
     public void loginWithWrongEmailAndPasswordReturnsUnathorized() {
-        //сгеним новую пару логин-пароль
+        //сгенерим новую пару логин-пароль
         email = DataGenerator.generateUserEmail();
         password = DataGenerator.generateUserPassword();
         //что-то там создадим

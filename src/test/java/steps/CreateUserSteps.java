@@ -100,11 +100,22 @@ public class CreateUserSteps {
     @Step("update users data")
     public Response updateDataForAuthorizedUser(String accessToken, UpdateUserData updateUserData) {
         return given()
+                .log().all()
                 .header("Authorization", accessToken)
                 .header("Content-Type", "application/json")
                 .body(updateUserData)
                 .when()
                 .patch("/api/auth/user");
+      }
+
+      @Step("Update User's Data for Non-Authorized User - no header with authorization")
+    public Response updateDataForNonAuthorizedUser(UpdateUserData updateUserData) {
+          return given()
+                  .log().all()
+                  .header("Content-Type", "application/json")
+                  .body(updateUserData)
+                  .when()
+                  .patch("/api/auth/user");
       }
 
 
