@@ -7,18 +7,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pojo.request.UpdateUserData;
 import pojo.request.UserAuthenticationRequest;
-import pojo.request.UserRegistrationRequest;
 import pojo.response.UserRegistrationResponse;
 import steps.CreateUserSteps;
 import utils.DataGenerator;
-
-import javax.xml.crypto.Data;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class UpdateUsersDataTest extends BaseTest{
+public class UpdateUsersDataForAuthorizedUserTest extends BaseTest{
     private boolean isUserCreated;
     private String email;
     private String password;
