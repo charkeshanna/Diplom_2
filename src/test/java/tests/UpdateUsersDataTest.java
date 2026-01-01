@@ -12,6 +12,8 @@ import pojo.response.UserRegistrationResponse;
 import steps.CreateUserSteps;
 import utils.DataGenerator;
 
+import javax.xml.crypto.Data;
+
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -96,6 +98,40 @@ public class UpdateUsersDataTest extends BaseTest{
         createUserSteps.checkStatusCode(response, 200);
         //проверим успешность
         createUserSteps.checkResponseValue(response, "success", true);
+        //проверим, что с новым паролем можно залогиниться
+        UserAuthenticationRequest userAuthenticationRequest = new UserAuthenticationRequest(email, password);
+        Response responseAuth = createUserSteps.loginAsUser(userAuthenticationRequest);
+        // проверю статус-код
+        createUserSteps.checkStatusCode(responseAuth, 200);
+        //проверю успешное сообщение
+        createUserSteps.checkResponseValue(responseAuth, "success", true);
+    }
+
+    @Test
+    @DisplayName("Check that all fields can be updated for authorized user in one request")
+    public void updateAllFieldsForAuthorizedUserReturnsSuccess() {
+        //create new email
+        email = DataGenerator.generateUserEmail();
+        //create new password
+        password = DataGenerator.generateUserPassword();
+        //create new name
+        name = "Updated_" + email;
+        //создадим объект c обновленными данными
+        UpdateUserData updateUserData = new UpdateUserData();
+        updateUserData.setPassword(password);
+        updateUserData.setEmail(email);
+        updateUserData.setName(name);
+
+        //отправим запрос сначала просто проверим респонс
+        Response response = createUserSteps.updateDataForAuthorizedUser(accessToken, updateUserData);
+        //проверим код ответа
+        createUserSteps.checkStatusCode(response, 200);
+        //проверим успешность
+        createUserSteps.checkResponseValue(response, "success", true);
+        //check that email was updated
+        createUserSteps.checkResponseValue(response, "user.email", email);
+        //проверим что обновился firstname
+        createUserSteps.checkResponseValue(response, "user.name", name);
         //проверим, что с новым паролем можно залогиниться
         UserAuthenticationRequest userAuthenticationRequest = new UserAuthenticationRequest(email, password);
         Response responseAuth = createUserSteps.loginAsUser(userAuthenticationRequest);
