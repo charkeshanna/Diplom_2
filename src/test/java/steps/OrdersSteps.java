@@ -72,5 +72,15 @@ public class OrdersSteps {
         return "ffffffffffffffffffffffff";
     }
 
+    @Step("Отправим запрос для получения заказов")
+    public Response sendGetOrdersRequestForAuthorizedUser(String accessToken) {
+        return given()
+                .log().all()
+                .header("Content-type", "application/json")
+                .header("Authorization", accessToken)
+                .when()
+                .get("/api/orders");
+    }
+
 
 }
