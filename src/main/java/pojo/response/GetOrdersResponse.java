@@ -11,4 +11,7 @@ public class GetOrdersResponse {
     private List<Order> orders;
     private int total;
     private int totalToday;
+
+    public GetOrdersResponse() {}
+
 }

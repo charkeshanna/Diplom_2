@@ -3,6 +3,7 @@ package steps;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import pojo.request.CreateOrderRequest;
+import pojo.response.GetOrdersResponse;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,13 +74,14 @@ public class OrdersSteps {
     }
 
     @Step("Отправим запрос для получения заказов")
-    public Response sendGetOrdersRequestForAuthorizedUser(String accessToken) {
+    public GetOrdersResponse sendGetOrdersRequestForAuthorizedUser(String accessToken) {
         return given()
                 .log().all()
                 .header("Content-type", "application/json")
                 .header("Authorization", accessToken)
                 .when()
-                .get("/api/orders");
+                .get("/api/orders")
+                .body().as(GetOrdersResponse.class);
     }
 
 

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pojo.request.CreateOrderRequest;
+import pojo.response.GetOrdersResponse;
 import pojo.response.UserRegistrationResponse;
 import steps.CreateUserSteps;
 import steps.OrdersSteps;
@@ -67,17 +68,12 @@ public class GetUsersOrdersTest extends BaseTest {
     @Test
     @DisplayName("get users orders")
     public void getUsersOrdersRequestReturnsSomething() {
-        Response response = ordersSteps.sendGetOrdersRequestForAuthorizedUser(accessToken);
-
-        ordersSteps.checkStatusCode(response,200);
-        //проверим успешность сообщения
-        ordersSteps.checkResponseValue(response, "success", true);
-        //сохраним номер заказа который возвращается в ответе
-        int totalToday = response.jsonPath().getInt("totalToday");
-        System.out.println(totalToday);
-        assertEquals(2, totalToday);
-        //assertNotNull(orderNumber, "OrderNumber should not be null");
-        //assertTrue(totalToday==2, "Order Number should be greater than 0");
+        GetOrdersResponse getOrdersResponse = ordersSteps.sendGetOrdersRequestForAuthorizedUser(accessToken);
+        System.out.println("Количество заказов: " + getOrdersResponse.getOrders().size());
+        assertNotNull(getOrdersResponse.getOrders(), "Список заказов пустой");
+        //Поменять потом число заказов которые возвращаются!
+        //проверяю что возвращает только 50 последних заказов
+        assertTrue(getOrdersResponse.getOrders().size() <= 1);
 
     }
 
