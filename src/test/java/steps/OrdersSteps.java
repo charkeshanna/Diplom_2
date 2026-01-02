@@ -67,6 +67,10 @@ public class OrdersSteps {
         assertEquals(expectedValue, actualValue, "Значение по ключу '" + key + "' не совпадает");
     }
 
+    @Step("Generate not existing hash of valid format")
+    public String generateInvalidIngredientHash() {
+        return "ffffffffffffffffffffffff";
+    }
 
 
 }
