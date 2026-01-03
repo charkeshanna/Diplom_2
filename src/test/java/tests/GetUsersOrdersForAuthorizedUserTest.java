@@ -70,13 +70,12 @@ public class GetUsersOrdersForAuthorizedUserTest extends BaseTest {
 
     @Test
     @DisplayName("get users orders")
-    public void getUsersOrdersRequestReturns50OrdersSortedByUpdatedDate() {
+    public void getUsersOrdersRequestReturns50ordersSortedByUpdatedDate() {
         GetOrdersResponse getOrdersResponse = ordersSteps.sendGetOrdersRequestForAuthorizedUser(accessToken);
-        System.out.println("Количество заказов: " + getOrdersResponse.getOrders().size());
         assertNotNull(getOrdersResponse.getOrders(), "Список заказов пустой");
         //Поменять потом число заказов которые возвращаются!
         //проверяю что возвращает только 50 последних заказов
-        assertTrue(getOrdersResponse.getOrders().size() <= 50);
+        assertTrue(getOrdersResponse.getOrders().size() <= 50, "Сервер должен вернуть не больше  50 последних заказов, а вернул: " + getOrdersResponse.getOrders().size());
         //отдельно сохраняем список заказов
         List<Order> orders = getOrdersResponse.getOrders();
         //будем сравнивать что по датам сортировано правильно

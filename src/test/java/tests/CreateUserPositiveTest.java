@@ -33,7 +33,7 @@ public class CreateUserPositiveTest extends BaseTest{
 
     @Test
     //to update
-    @DisplayName("Check correct response code and text after adding a courier with all fields filled")
+    @DisplayName("Check correct response code and text after adding new user with all fields filled")
     public void createUserReturnsValidResponse() {
         //генерирую логин и пароль
         email = DataGenerator.generateUserEmail();
@@ -46,10 +46,8 @@ public class CreateUserPositiveTest extends BaseTest{
         createUserSteps.checkStatusCode(response, 200);
         //проверка тела сообщения
         createUserSteps.checkResponseValue(response, "success", true);
-        //десериализация ответа
+        //десериализация ответа чтобы получить токен
         UserRegistrationResponse userRegistrationResponse = createUserSteps.userRegistrationResponse(response);
         accessToken = userRegistrationResponse.getAccessToken();
-        String refreshToken = userRegistrationResponse.getRefreshToken();
-
     }
 }

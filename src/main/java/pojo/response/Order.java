@@ -14,6 +14,6 @@ public class Order {
     private String createdAt;
     private String updatedAt;
     private int number;
-    //пустой констуктор
+    //пустой конструктор
     public Order() {}
 }

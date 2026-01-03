@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrdersSteps {
 
-    @Step("Получим список всех ингредиентов")
+    @Step("Get ingredients list")
     //получим список ингредиентов
     public List<String> getAllIngredientsList() {
         return given()
@@ -34,10 +34,9 @@ public class OrdersSteps {
         return copy.subList(0, count);
     }
 
-    @Step("Отправим запрос с заказом")
+    @Step("Send request to create an order with authorization")
     public Response sendCreateOrderRequest(String accessToken, CreateOrderRequest createOrderRequest) {
         return given()
-                .log().all()
                 .header("Content-type", "application/json")
                 .header("Authorization", accessToken)
                 .body(createOrderRequest)
@@ -45,10 +44,9 @@ public class OrdersSteps {
                 .post("/api/orders");
     }
 
-    @Step("Отправим заказ без токена")
+    @Step("Send request to create an order without token")
     public Response sendCreateOrderRequestWithoutToken(CreateOrderRequest createOrderRequest) {
         return given()
-                .log().all()
                 .header("Content-type", "application/json")
                 .body(createOrderRequest)
                 .when()
@@ -72,10 +70,9 @@ public class OrdersSteps {
         return "ffffffffffffffffffffffff";
     }
 
-    @Step("Отправим запрос для получения заказов")
+    @Step("Send getOrders request for Authorized user")
     public GetOrdersResponse sendGetOrdersRequestForAuthorizedUser(String accessToken) {
         return given()
-                .log().all()
                 .header("Content-type", "application/json")
                 .header("Authorization", accessToken)
                 .when()
@@ -83,10 +80,9 @@ public class OrdersSteps {
                 .body().as(GetOrdersResponse.class);
     }
 
-    @Step("Отправим запрос для получения заказов для неавторизованного пользователя")
+    @Step("Send request to get orders for unauthorized user")
     public Response sendGetOrdersRequestForNonAuthorizedUser() {
         return given()
-                .log().all()
                 .header("Content-type", "application/json")
                 .when()
                 .get("/api/orders");

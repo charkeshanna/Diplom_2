@@ -38,7 +38,7 @@ public class CreateUserWithoutRequiredFieldsTest extends BaseTest{
 
     @Test
     //to update
-    @DisplayName("Create user without email")
+    @DisplayName("Create user without password")
     public void createUserWithoutPasswordForbidden() {
         //генерирую email
         email = DataGenerator.generateUserEmail();
@@ -54,7 +54,7 @@ public class CreateUserWithoutRequiredFieldsTest extends BaseTest{
 
     @Test
     //to update
-    @DisplayName("Create user without email")
+    @DisplayName("Create user without firstName")
     public void createUserWithoutFirstNameForbidden() {
         //генерирую email and password
         email = DataGenerator.generateUserEmail();

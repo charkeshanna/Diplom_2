@@ -22,7 +22,6 @@ public class CreateUserSteps {
                 .body(userRegistrationRequest)
                 .when()
                 .post("/api/auth/register");
-                //.body().as(UserRegistrationResponse.class);
     }
 
     @Step("Check status code {expectedCode} of the response")
@@ -31,7 +30,7 @@ public class CreateUserSteps {
         assertEquals(expectedCode, actualCode, "Статус-код не совпадает!");
     }
 
-    @Step("Десериализация возвращаемого объекта")
+    @Step("Deserialization of the response")
     public UserRegistrationResponse userRegistrationResponse(Response response) {
         return response.then().extract().as(UserRegistrationResponse.class);
     }
@@ -51,7 +50,7 @@ public class CreateUserSteps {
                 .body("message", equalTo("Email, password and name are required fields"));
     }
 
-    @Step("so")
+    @Step("Check status code and messages")
     public void checkAfterAttemptToCreateAlreadyExistingUserReturnMessage(Response response) {
         response.then()
                 .statusCode(403)
@@ -94,10 +93,9 @@ public class CreateUserSteps {
                 .post("/api/auth/login");
     }
 
-    @Step("update users data")
+    @Step("Update user's data")
     public Response updateDataForAuthorizedUser(String accessToken, UpdateUserData updateUserData) {
         return given()
-                .log().all()
                 .header("Authorization", accessToken)
                 .header("Content-Type", "application/json")
                 .body(updateUserData)
@@ -108,7 +106,6 @@ public class CreateUserSteps {
       @Step("Update User's Data for Non-Authorized User - no header with authorization")
     public Response updateDataForNonAuthorizedUser(UpdateUserData updateUserData) {
           return given()
-                  .log().all()
                   .header("Content-Type", "application/json")
                   .body(updateUserData)
                   .when()
