@@ -1,13 +1,10 @@
 package steps;
-
-import freemarker.core._ArrayEnumeration;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import pojo.request.UpdateUserData;
 import pojo.request.UserAuthenticationRequest;
 import pojo.request.UserRegistrationRequest;
 import pojo.response.UserRegistrationResponse;
-import utils.DataGenerator;
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -119,40 +116,4 @@ public class CreateUserSteps {
       }
 
 
-
-
-
-
-/*
-    @Step("Login as courier (without checking the response)")
-    public  Response loginWithLoginAndPassword(CourierCredentials courierCredentials) {
-        return given()
-                .header("Content-type", "application/json")
-                .body(courierCredentials)
-                .when()
-                .post("/api/v1/courier/login");
-    }
-
-    @Step("Get id after successful login")
-    public  Integer getCourierIdAfterSuccessLogin(Response response) {
-        return response.path("id");
-    }
-
-    @Step("Remove courier using courierId {id}")
-    public  void deleteCourierById(int id) {
-        given()
-                .header("Content-type", "application/json")
-                .when()
-                .delete("/api/v1/courier/" + String.valueOf(id))
-                .then()
-                .statusCode(200);
-
-    }
-    @Step("Add courier (without processing id)")
-    public  Response addCourierReturnsSuccessResponse(String login, String password) {
-        Courier courier = new Courier(login, password, null);
-        Response response = createCourier(courier);
-        checkStatusCode(response, 201);
-        return response;
-    }*/
 }
