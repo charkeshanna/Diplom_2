@@ -7,11 +7,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pojo.request.CreateOrderRequest;
 import pojo.response.GetOrdersResponse;
+import pojo.response.Order;
 import pojo.response.UserRegistrationResponse;
 import steps.CreateUserSteps;
 import steps.OrdersSteps;
 import utils.DataGenerator;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,7 +46,7 @@ public class GetUsersOrdersTest extends BaseTest {
         ordersSteps = new OrdersSteps();
         allIngredients = ordersSteps.getAllIngredientsList();
         int successOrders = 0;
-        while (successOrders < 2) {
+        while (successOrders < 5) {
             List<String> random = ordersSteps.getRandomIngredients(allIngredients, 3);
             CreateOrderRequest createOrderRequest = new CreateOrderRequest(random);
             Response response = ordersSteps.sendCreateOrderRequest(accessToken, createOrderRequest);
@@ -73,7 +75,19 @@ public class GetUsersOrdersTest extends BaseTest {
         assertNotNull(getOrdersResponse.getOrders(), "Список заказов пустой");
         //Поменять потом число заказов которые возвращаются!
         //проверяю что возвращает только 50 последних заказов
-        assertTrue(getOrdersResponse.getOrders().size() <= 1);
+        assertTrue(getOrdersResponse.getOrders().size() <= 50);
+        //отдельно сохраняем список заказов
+        List<Order> orders = getOrdersResponse.getOrders();
+        //будем сравнивать что по датам сортировано правильно
+        for (int i = 0; i < orders.size() - 1; i++) {
+            Instant current = Instant.parse(orders.get(i).getUpdatedAt());
+            Instant next = Instant.parse(orders.get(i + 1).getUpdatedAt());
+
+            assertTrue(
+                    current.isBefore(next),
+                    "Заказы не отсортированы по updatedAt"
+            );
+        }
 
     }
 
