@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GetUsersOrdersTest extends BaseTest {
+public class GetUsersOrdersForAuthorizedUserTest extends BaseTest {
 
     OrdersSteps ordersSteps;
     List<String> allIngredients;
@@ -43,10 +43,11 @@ public class GetUsersOrdersTest extends BaseTest {
         accessToken = userRegistrationResponse.getAccessToken();
 
         //получу список заказов чтобы потом вытянуть хэши и сформировать свой заказ
+        //создам больше 50 заказов
         ordersSteps = new OrdersSteps();
         allIngredients = ordersSteps.getAllIngredientsList();
         int successOrders = 0;
-        while (successOrders < 5) {
+        while (successOrders < 53) {
             List<String> random = ordersSteps.getRandomIngredients(allIngredients, 3);
             CreateOrderRequest createOrderRequest = new CreateOrderRequest(random);
             Response response = ordersSteps.sendCreateOrderRequest(accessToken, createOrderRequest);
@@ -69,7 +70,7 @@ public class GetUsersOrdersTest extends BaseTest {
 
     @Test
     @DisplayName("get users orders")
-    public void getUsersOrdersRequestReturnsSomething() {
+    public void getUsersOrdersRequestReturns50OrdersSortedByUpdatedDate() {
         GetOrdersResponse getOrdersResponse = ordersSteps.sendGetOrdersRequestForAuthorizedUser(accessToken);
         System.out.println("Количество заказов: " + getOrdersResponse.getOrders().size());
         assertNotNull(getOrdersResponse.getOrders(), "Список заказов пустой");

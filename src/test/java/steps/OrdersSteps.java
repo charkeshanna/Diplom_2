@@ -84,5 +84,14 @@ public class OrdersSteps {
                 .body().as(GetOrdersResponse.class);
     }
 
+    @Step("Отправим запрос для получения заказов для неавторизованного пользователя")
+    public Response sendGetOrdersRequestForNonAuthorizedUser() {
+        return given()
+                .log().all()
+                .header("Content-type", "application/json")
+                .when()
+                .get("/api/orders");
+    }
+
 
 }
