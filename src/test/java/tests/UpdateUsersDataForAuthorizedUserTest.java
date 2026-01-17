@@ -1,0 +1,137 @@
+package tests;
+
+import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import pojo.request.UpdateUserData;
+import pojo.request.UserAuthenticationRequest;
+import pojo.response.UserRegistrationResponse;
+import steps.CreateUserSteps;
+import utils.DataGenerator;
+
+
+public class UpdateUsersDataForAuthorizedUserTest extends BaseTest{
+    private boolean isUserCreated;
+    private String email;
+    private String password;
+    private String firstName;
+    private String name;
+    private String accessToken;
+    CreateUserSteps createUserSteps;
+    @BeforeEach
+    public void setUp() {
+        createUserSteps = new CreateUserSteps();
+        //сгенерируем email & password
+        email = DataGenerator.generateUserEmail();
+        password = DataGenerator.generateUserPassword();
+        firstName = email + "firstName";
+        //создадим юзера
+        UserRegistrationResponse userRegistrationResponse = createUserSteps.createNewUserReturnsSuccessAndResponse(email, password, firstName);
+        isUserCreated = true;
+        accessToken = userRegistrationResponse.getAccessToken();
+
+    }
+
+    @AfterEach
+    public void deleteUser() {
+        if(isUserCreated) {
+            createUserSteps.removeCreatedUser(accessToken);
+        }
+    }
+
+
+    @Test
+    @DisplayName("Check that firstName of the authorized user can be updated")
+    public void updateNameOfAuthorizedUserReturnsSuccess() {
+        //create new firstname
+        name = firstName + "updated";
+        //создадим объект c обновленными данными
+        UpdateUserData updateUserData = new UpdateUserData();
+        updateUserData.setName(name);
+        //отправим запрос сначала просто проверим респонс
+        Response response = createUserSteps.updateDataForAuthorizedUser(accessToken, updateUserData);
+        //проверим код ответа
+        createUserSteps.checkStatusCode(response, 200);
+        //проверим успешность
+        createUserSteps.checkResponseValue(response, "success", true);
+        //проверим что обновился firstname
+        createUserSteps.checkResponseValue(response, "user.name", name);
+    }
+
+    @Test
+    @DisplayName("Check that email can be updated for authorized user")
+    public void updateEmailOfAuthorizedUserReturnsSuccess() {
+        //create new email
+        email = DataGenerator.generateUserEmail();
+        //создадим объект c обновленными данными
+        UpdateUserData updateUserData = new UpdateUserData();
+        updateUserData.setEmail(email);
+        //отправим запрос сначала просто проверим респонс
+        Response response = createUserSteps.updateDataForAuthorizedUser(accessToken, updateUserData);
+        //проверим код ответа
+        createUserSteps.checkStatusCode(response, 200);
+        //проверим успешность
+        createUserSteps.checkResponseValue(response, "success", true);
+        //проверим что обновился firstname
+        createUserSteps.checkResponseValue(response, "user.email", email);
+    }
+
+    @Test
+    @DisplayName("Check that password can be updated for authorized user")
+    public void updatePasswordForAuthorizedUserReturnsSuccess() {
+        //create new email
+        password = DataGenerator.generateUserPassword();
+        //создадим объект c обновленными данными
+        UpdateUserData updateUserData = new UpdateUserData();
+        updateUserData.setPassword(password);
+        //отправим запрос сначала просто проверим респонс
+        Response response = createUserSteps.updateDataForAuthorizedUser(accessToken, updateUserData);
+        //проверим код ответа
+        createUserSteps.checkStatusCode(response, 200);
+        //проверим успешность
+        createUserSteps.checkResponseValue(response, "success", true);
+        //проверим, что с новым паролем можно залогиниться
+        UserAuthenticationRequest userAuthenticationRequest = new UserAuthenticationRequest(email, password);
+        Response responseAuth = createUserSteps.loginAsUser(userAuthenticationRequest);
+        // проверю статус-код
+        createUserSteps.checkStatusCode(responseAuth, 200);
+        //проверю успешное сообщение
+        createUserSteps.checkResponseValue(responseAuth, "success", true);
+    }
+
+    @Test
+    @DisplayName("Check that all fields can be updated for authorized user in one request")
+    public void updateAllFieldsForAuthorizedUserReturnsSuccess() {
+        //create new email
+        email = DataGenerator.generateUserEmail();
+        //create new password
+        password = DataGenerator.generateUserPassword();
+        //create new name
+        name = "Updated_" + email;
+        //создадим объект c обновленными данными
+        UpdateUserData updateUserData = new UpdateUserData();
+        updateUserData.setPassword(password);
+        updateUserData.setEmail(email);
+        updateUserData.setName(name);
+
+        //отправим запрос сначала просто проверим респонс
+        Response response = createUserSteps.updateDataForAuthorizedUser(accessToken, updateUserData);
+        //проверим код ответа
+        createUserSteps.checkStatusCode(response, 200);
+        //проверим успешность
+        createUserSteps.checkResponseValue(response, "success", true);
+        //check that email was updated
+        createUserSteps.checkResponseValue(response, "user.email", email);
+        //проверим что обновился firstname
+        createUserSteps.checkResponseValue(response, "user.name", name);
+        //проверим, что с новым паролем можно залогиниться
+        UserAuthenticationRequest userAuthenticationRequest = new UserAuthenticationRequest(email, password);
+        Response responseAuth = createUserSteps.loginAsUser(userAuthenticationRequest);
+        // проверю статус-код
+        createUserSteps.checkStatusCode(responseAuth, 200);
+        //проверю успешное сообщение
+        createUserSteps.checkResponseValue(responseAuth, "success", true);
+    }
+}
